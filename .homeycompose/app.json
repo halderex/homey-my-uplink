@@ -1,6 +1,6 @@
 {
   "id": "com.nibe.myuplink",
-  "version": "1.9.3",
+  "version": "1.10.0",
   "compatibility": ">=12.2.0",
   "sdk": 3,
   "platforms": [

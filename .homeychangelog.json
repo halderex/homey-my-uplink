@@ -130,5 +130,8 @@
   },
   "1.9.3": {
     "en": "Better power monitoring for some S-Series pumps"
+  },
+  "1.10.0": {
+    "en": "Added optional Operational mode and Speed brine pump parameters for those who has it"
   }
 }
