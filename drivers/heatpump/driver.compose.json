@@ -22,10 +22,12 @@
     "measure_temperature.extract_air",
     "measure_temperature.suction_gas",
     "measure_fan_speed.exhaust_air",
+    "measure_pump_speed.brine",
     "measure_air_velocity",
     "measure_frequency.compressor",
     "measure_power.internal_addition",
     "status_compressor",
+    "heater_operational_mode",
     "measure_degree_minutes",
     "measure_current.one",
     "measure_current.two",
@@ -227,6 +229,15 @@
         "da": "Effekt intern tilsætning",
         "no": "Effekt intern tilsetning",
         "nl": "Vermogen interne bijverwarming"
+      }
+    },
+    "measure_pump_speed.brine": {
+      "title": {
+        "en": "Brine pump speed (GP2)",
+        "sv": "Köldbärarpumpshastighet (GP2)",
+        "da": "Brinepumpehastighed (GP2)",
+        "no": "Kollektorpumpehastighet (GP2)",
+        "nl": "Bronpompsnelheid (GP2)"
       }
     }
   },

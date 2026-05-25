@@ -1,0 +1,15 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Operational mode",
+    "sv": "Driftläge",
+    "da": "Driftstilstand",
+    "no": "Driftsmodus",
+    "nl": "Bedrijfsmodus"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "icon": "/assets/compressor.svg",
+  "units": "char"
+}

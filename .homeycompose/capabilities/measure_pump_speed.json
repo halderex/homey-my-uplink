@@ -1,0 +1,22 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Pump speed",
+    "sv": "Pumphastighet",
+    "da": "Pumpehastighed",
+    "no": "Pumpehastighet",
+    "nl": "Pompsnelheid"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "desc": {
+    "en": "Current pump speed",
+    "sv": "Nuvarande pumphastighet",
+    "da": "Nuværende pumpehastighed",
+    "no": "Nåværende pumpehastighet",
+    "nl": "Huidige pompsnelheid"
+  },
+  "units": "%",
+  "icon": "/assets/fan_speed.svg"
+}

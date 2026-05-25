@@ -45,6 +45,8 @@ class FSeriesDevice extends OAuth2Device {
         // ParameterIds.ELECTRIC_ADDITION_STATUS
         FSeriesParameterIds.SET_POINT_TEMP_F730,
         FSeriesParameterIds.SET_MAX_ELECTRICAL_ADD,
+        FSeriesParameterIds.OPERATIONAL_MODE,
+        FSeriesParameterIds.BRINE_PUMP_SPEED,
     ];
 
     /**
@@ -54,6 +56,16 @@ class FSeriesDevice extends OAuth2Device {
     static CAPABILITY_PARAMETER_MAP = {
         'state_button.temp_lux': FSeriesParameterIds.TEMPORARY_LUX,
         'state_button.ventilation_boost': FSeriesParameterIds.INCREASED_VENTILATION,
+    };
+
+    /**
+     * Capabilities that are only added when the heat pump actually reports the parameter.
+     * If the parameter is missing from the API response, the capability is removed.
+     * @type {Object.<number, string>}
+     */
+    static OPTIONAL_CAPABILITIES = {
+        [FSeriesParameterIds.OPERATIONAL_MODE]: 'heater_operational_mode',
+        [FSeriesParameterIds.BRINE_PUMP_SPEED]: 'measure_pump_speed.brine',
     };
 
     /**
@@ -346,6 +358,19 @@ ${"#".repeat(deviceInfoHeader.length)}
                     await this.addCapability('target_temperature.room');
                 }
                 await this.setCapabilityValue('target_temperature.room', chosenValue);
+            }
+
+            // Prune optional capabilities that the device does not report
+            for (const [defaultParamId, capability] of Object.entries(FSeriesDevice.OPTIONAL_CAPABILITIES)) {
+                const effectiveId = this._getEffectiveParamId(Number(defaultParamId));
+                if (!seenParams.has(effectiveId) && this.hasCapability(capability)) {
+                    try {
+                        this.log(`Removing optional capability ${capability}: parameter ${effectiveId} not reported by device`);
+                        await this.removeCapability(capability);
+                    } catch (err) {
+                        this.error(`Failed to remove capability ${capability}: ${err.message}`);
+                    }
+                }
             }
 
             const hasSupplyLine = seenParams.has(supplyLineId) && this.isValidTemperature(numericValues[supplyLineId]);

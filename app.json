@@ -1337,10 +1337,12 @@
         "measure_temperature.extract_air",
         "measure_temperature.suction_gas",
         "measure_fan_speed.exhaust_air",
+        "measure_pump_speed.brine",
         "measure_air_velocity",
         "measure_frequency.compressor",
         "measure_power.internal_addition",
         "status_compressor",
+        "heater_operational_mode",
         "measure_degree_minutes",
         "measure_current.one",
         "measure_current.two",
@@ -1542,6 +1544,15 @@
             "da": "Effekt intern tilsætning",
             "no": "Effekt intern tilsetning",
             "nl": "Vermogen interne bijverwarming"
+          }
+        },
+        "measure_pump_speed.brine": {
+          "title": {
+            "en": "Brine pump speed (GP2)",
+            "sv": "Köldbärarpumpshastighet (GP2)",
+            "da": "Brinepumpehastighed (GP2)",
+            "no": "Kollektorpumpehastighet (GP2)",
+            "nl": "Bronpompsnelheid (GP2)"
           }
         }
       },
@@ -1924,6 +1935,46 @@
                 "no": "Standard: 41778. Sett til 0 for standard.",
                 "da": "Standard: 41778. Sæt til 0 for standard.",
                 "nl": "Standaard: 41778. Stel in op 0 voor standaard."
+              },
+              "value": 0,
+              "min": 0
+            },
+            {
+              "id": "param_operational_mode",
+              "type": "number",
+              "label": {
+                "en": "Operational mode",
+                "sv": "Driftläge",
+                "no": "Driftsmodus",
+                "da": "Driftstilstand",
+                "nl": "Bedrijfsmodus"
+              },
+              "hint": {
+                "en": "Default: 47570. Set to 0 to use default.",
+                "sv": "Standard: 47570. Sätt till 0 för standard.",
+                "no": "Standard: 47570. Sett til 0 for standard.",
+                "da": "Standard: 47570. Sæt til 0 for standard.",
+                "nl": "Standaard: 47570. Stel in op 0 voor standaard."
+              },
+              "value": 0,
+              "min": 0
+            },
+            {
+              "id": "param_brine_pump_speed",
+              "type": "number",
+              "label": {
+                "en": "Brine pump speed (GP2)",
+                "sv": "Köldbärarpumpshastighet (GP2)",
+                "no": "Kollektorpumpehastighet (GP2)",
+                "da": "Brinepumpehastighed (GP2)",
+                "nl": "Bronpompsnelheid (GP2)"
+              },
+              "hint": {
+                "en": "Default: 47418. Set to 0 to use default.",
+                "sv": "Standard: 47418. Sätt till 0 för standard.",
+                "no": "Standard: 47418. Sett til 0 for standard.",
+                "da": "Standard: 47418. Sæt til 0 for standard.",
+                "nl": "Standaard: 47418. Stel in op 0 voor standaard."
               },
               "value": 0,
               "min": 0
@@ -2451,6 +2502,21 @@
     }
   ],
   "capabilities": {
+    "heater_operational_mode": {
+      "type": "string",
+      "title": {
+        "en": "Operational mode",
+        "sv": "Driftläge",
+        "da": "Driftstilstand",
+        "no": "Driftsmodus",
+        "nl": "Bedrijfsmodus"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "icon": "/assets/compressor.svg",
+      "units": "char"
+    },
     "hot_water_demand": {
       "title": {
         "en": "Hot water demand",
@@ -2581,6 +2647,28 @@
       },
       "units": "kW",
       "icon": "/assets/measure_current.svg"
+    },
+    "measure_pump_speed": {
+      "type": "number",
+      "title": {
+        "en": "Pump speed",
+        "sv": "Pumphastighet",
+        "da": "Pumpehastighed",
+        "no": "Pumpehastighet",
+        "nl": "Pompsnelheid"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "desc": {
+        "en": "Current pump speed",
+        "sv": "Nuvarande pumphastighet",
+        "da": "Nuværende pumpehastighed",
+        "no": "Nåværende pumpehastighet",
+        "nl": "Huidige pompsnelheid"
+      },
+      "units": "%",
+      "icon": "/assets/fan_speed.svg"
     },
     "set_max_electrical_add": {
       "title": {
