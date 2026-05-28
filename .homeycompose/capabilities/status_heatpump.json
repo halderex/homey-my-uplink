@@ -1,0 +1,15 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Heat pump status",
+    "sv": "Värmepumpsstatus",
+    "da": "Varmepumpestatus",
+    "no": "Varmepumpestatus",
+    "nl": "Warmtepompstatus"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "icon": "/assets/compressor.svg",
+  "units": "char"
+}

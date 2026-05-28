@@ -1,0 +1,15 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Compressor starts",
+    "sv": "Kompressorstarter",
+    "da": "Kompressorstarter",
+    "no": "Kompressorstarter",
+    "nl": "Compressorstarts"
+  },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "icon": "/assets/compressor.svg",
+  "insights": true
+}

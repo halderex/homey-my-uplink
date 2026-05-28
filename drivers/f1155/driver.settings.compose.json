@@ -1,0 +1,158 @@
+[
+  {
+    "id": "firmware",
+    "type": "label",
+    "label": {
+      "en": "Firmware",
+      "sv": "Programvara",
+      "da": "Firmware",
+      "no": "Firmware",
+      "nl": "Firmware"
+    },
+    "value": ""
+  },
+  {
+    "id": "serialNumber",
+    "type": "label",
+    "label": {
+      "en": "Serial number",
+      "sv": "Serienummer",
+      "da": "Serienummer",
+      "no": "Serienummer",
+      "nl": "Serienummer"
+    },
+    "value": ""
+  },
+  {
+    "id": "fetchIntervall",
+    "type": "number",
+    "label": {
+      "en": "Interval in minutes to fetch data",
+      "sv": "Intervall i minuter för hämtning av data",
+      "da": "Interval i minutter for hentning af data",
+      "no": "Intervall i minutter for henting av data",
+      "nl": "Interval in minuten om data op te halen"
+    },
+    "min": 5,
+    "value": 5
+  },
+  {
+    "id": "heating_curve",
+    "type": "number",
+    "label": {
+      "en": "Heating Curve",
+      "sv": "Värmekurva",
+      "no": "Varmekurve",
+      "da": "Varme Kurve",
+      "nl": "Verwarmingscurve"
+    },
+    "value": 5,
+    "min": 0,
+    "max": 15,
+    "step": 1
+  },
+  {
+    "id": "heating_offset",
+    "type": "number",
+    "label": {
+      "en": "Heating Offset",
+      "sv": "Värmejustering",
+      "no": "Varmejustering",
+      "da": "Varmejustering",
+      "nl": "Verwarmingscompensatie"
+    },
+    "value": 0,
+    "min": -10,
+    "max": 10,
+    "step": 1
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Parameter overrides",
+      "sv": "Parameteröverskrivningar",
+      "da": "Parametertilsidesættelser",
+      "no": "Parameteroverstyrelser",
+      "nl": "Parameter overschrijvingen"
+    },
+    "children": [
+      {
+        "id": "override_outdoor_temp",
+        "type": "number",
+        "label": { "en": "Outdoor temperature" },
+        "hint": { "en": "Leave 0 to use the default (40004)" },
+        "value": 0
+      },
+      {
+        "id": "override_supply_line",
+        "type": "number",
+        "label": { "en": "Supply line" },
+        "hint": { "en": "Leave 0 to use the default (40008)" },
+        "value": 0
+      },
+      {
+        "id": "override_return_line",
+        "type": "number",
+        "label": { "en": "Return line" },
+        "hint": { "en": "Leave 0 to use the default (40012)" },
+        "value": 0
+      },
+      {
+        "id": "override_hot_water_top",
+        "type": "number",
+        "label": { "en": "Hot water top" },
+        "hint": { "en": "Leave 0 to use the default (40013)" },
+        "value": 0
+      },
+      {
+        "id": "override_hot_water_charging",
+        "type": "number",
+        "label": { "en": "Hot water charging" },
+        "hint": { "en": "Leave 0 to use the default (40014)" },
+        "value": 0
+      },
+      {
+        "id": "override_room_temp",
+        "type": "number",
+        "label": { "en": "Room temperature" },
+        "hint": { "en": "Leave 0 to use the default (40033)" },
+        "value": 0
+      },
+      {
+        "id": "override_brine_in",
+        "type": "number",
+        "label": { "en": "Brine in" },
+        "hint": { "en": "Leave 0 to use the default (40015)" },
+        "value": 0
+      },
+      {
+        "id": "override_brine_out",
+        "type": "number",
+        "label": { "en": "Brine out" },
+        "hint": { "en": "Leave 0 to use the default (40016)" },
+        "value": 0
+      },
+      {
+        "id": "override_degree_minutes",
+        "type": "number",
+        "label": { "en": "Degree minutes" },
+        "hint": { "en": "Leave 0 to use the default (40941)" },
+        "value": 0
+      },
+      {
+        "id": "override_compressor_freq",
+        "type": "number",
+        "label": { "en": "Compressor frequency" },
+        "hint": { "en": "Leave 0 to use the default (41778)" },
+        "value": 0
+      },
+      {
+        "id": "override_target_room_temp",
+        "type": "number",
+        "label": { "en": "Target room temperature setpoint" },
+        "hint": { "en": "Leave 0 to use the default (47398)" },
+        "value": 0
+      }
+    ]
+  }
+]

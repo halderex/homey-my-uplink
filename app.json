@@ -1315,6 +1315,454 @@
   "drivers": [
     {
       "name": {
+        "en": "Nibe F1155",
+        "sv": "Nibe F1155",
+        "da": "Nibe F1155",
+        "no": "Nibe F1155",
+        "nl": "Nibe F1155"
+      },
+      "class": "heatpump",
+      "capabilities": [
+        "target_temperature.room",
+        "measure_temperature.room",
+        "measure_temperature.outdoor",
+        "measure_temperature.supply_line",
+        "measure_temperature.return_line",
+        "measure_temperature.hot_water_top",
+        "measure_temperature.hot_water_charging",
+        "measure_temperature.brine_in",
+        "measure_temperature.brine_out",
+        "measure_temperature.condenser",
+        "measure_temperature.suction_gas",
+        "measure_temperature.calculated_supply_line",
+        "measure_frequency.compressor",
+        "measure_pump_speed.heating_medium",
+        "measure_pump_speed.brine",
+        "measure_current.one",
+        "measure_current.two",
+        "measure_current.three",
+        "measure_degree_minutes",
+        "measure_compressor_starts",
+        "meter_power",
+        "status_compressor",
+        "state_button.temp_lux"
+      ],
+      "capabilitiesOptions": {
+        "target_temperature.room": {
+          "title": {
+            "en": "Target temperature",
+            "sv": "Måltemperatur",
+            "da": "Måltemperatur",
+            "no": "Måltemperatur",
+            "nl": "Streeftemperatuur"
+          },
+          "min": 5,
+          "max": 35,
+          "step": 0.5
+        },
+        "measure_temperature.room": {
+          "title": {
+            "en": "Room temperature",
+            "sv": "Rumstemperatur",
+            "da": "Rumtemperatur",
+            "no": "Romtemperatur",
+            "nl": "Kamertemperatuur"
+          }
+        },
+        "measure_temperature.outdoor": {
+          "title": {
+            "en": "Outdoor",
+            "sv": "Utomhus",
+            "da": "Udendørs",
+            "no": "Utendørs",
+            "nl": "Buiten"
+          }
+        },
+        "measure_temperature.supply_line": {
+          "title": {
+            "en": "Supply line",
+            "sv": "Framledning",
+            "da": "Forsyningsledning",
+            "no": "Tilførselsledning",
+            "nl": "Aanvoerleiding"
+          }
+        },
+        "measure_temperature.return_line": {
+          "title": {
+            "en": "Return line",
+            "sv": "Returledning",
+            "da": "Returledning",
+            "no": "Returledning",
+            "nl": "Retourleiding"
+          }
+        },
+        "measure_temperature.hot_water_top": {
+          "title": {
+            "en": "Hot water top",
+            "sv": "Varmvatten topp",
+            "da": "Varmtvand top",
+            "no": "Varmtvann topp",
+            "nl": "Warm water boven"
+          }
+        },
+        "measure_temperature.hot_water_charging": {
+          "title": {
+            "en": "Hot water charging",
+            "sv": "Varmvatten laddning",
+            "da": "Varmtvandsopladning",
+            "no": "Varmtvannslading",
+            "nl": "Warm water laden"
+          }
+        },
+        "measure_temperature.brine_in": {
+          "title": {
+            "en": "Brine in",
+            "sv": "Köldbärare in",
+            "da": "Saltlage ind",
+            "no": "Kuldemedium inn",
+            "nl": "Pekel in"
+          }
+        },
+        "measure_temperature.brine_out": {
+          "title": {
+            "en": "Brine out",
+            "sv": "Köldbärare ut",
+            "da": "Saltlage ud",
+            "no": "Kuldemedium ut",
+            "nl": "Pekel uit"
+          }
+        },
+        "measure_temperature.condenser": {
+          "title": {
+            "en": "Condenser",
+            "sv": "Kondensor",
+            "da": "Kondensator",
+            "no": "Kondensator",
+            "nl": "Condensor"
+          }
+        },
+        "measure_temperature.suction_gas": {
+          "title": {
+            "en": "Suction gas",
+            "sv": "Suggas",
+            "da": "Sugegas",
+            "no": "Sugegass",
+            "nl": "Zuiggas"
+          }
+        },
+        "measure_temperature.calculated_supply_line": {
+          "title": {
+            "en": "Calculated supply line",
+            "sv": "Beräknad framledning",
+            "da": "Beregnet forsyningsledning",
+            "no": "Beregnet tilførselsledning",
+            "nl": "Berekende aanvoerleiding"
+          }
+        },
+        "measure_frequency.compressor": {
+          "title": {
+            "en": "Compressor frequency",
+            "sv": "Kompressorfrekvens",
+            "da": "Kompressorfrekvens",
+            "no": "Kompressorfrekvens",
+            "nl": "Compressorfrequentie"
+          }
+        },
+        "measure_pump_speed.heating_medium": {
+          "title": {
+            "en": "Heating medium pump (GP1)",
+            "sv": "Värmebärarpump (GP1)",
+            "da": "Varmemedium pumpe (GP1)",
+            "no": "Varmemedium pumpe (GP1)",
+            "nl": "Verwarmingsmedium pomp (GP1)"
+          }
+        },
+        "measure_pump_speed.brine": {
+          "title": {
+            "en": "Brine pump (GP2)",
+            "sv": "Köldbärarpump (GP2)",
+            "da": "Saltlagepumpe (GP2)",
+            "no": "Kuldemedium pumpe (GP2)",
+            "nl": "Pekelpomp (GP2)"
+          }
+        },
+        "measure_current.one": {
+          "title": {
+            "en": "Current Phase 1 (BE1)",
+            "sv": "Ström Fas 1 (BE1)",
+            "da": "Strøm Fase 1 (BE1)",
+            "no": "Strøm Fase 1 (BE1)",
+            "nl": "Stroom Fase 1 (BE1)"
+          }
+        },
+        "measure_current.two": {
+          "title": {
+            "en": "Current Phase 2 (BE2)",
+            "sv": "Ström Fas 2 (BE2)",
+            "da": "Strøm Fase 2 (BE2)",
+            "no": "Strøm Fase 2 (BE2)",
+            "nl": "Stroom Fase 2 (BE2)"
+          }
+        },
+        "measure_current.three": {
+          "title": {
+            "en": "Current Phase 3 (BE3)",
+            "sv": "Ström Fas 3 (BE3)",
+            "da": "Strøm Fase 3 (BE3)",
+            "no": "Strøm Fase 3 (BE3)",
+            "nl": "Stroom Fase 3 (BE3)"
+          }
+        },
+        "state_button.temp_lux": {
+          "title": {
+            "en": "Temporary luxury",
+            "sv": "Tillfällig lyx",
+            "da": "Midlertidig luksus",
+            "no": "Midlertidig luksus",
+            "nl": "Tijdelijk luxe"
+          }
+        }
+      },
+      "images": {
+        "small": "/drivers/f1155/assets/images/small.png",
+        "large": "/drivers/f1155/assets/images/large.png",
+        "xlarge": "/drivers/f1155/assets/images/xlarge.png"
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "pair": [
+        {
+          "id": "login_oauth2",
+          "template": "login_oauth2"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "repair": [
+        {
+          "id": "login_oauth2",
+          "template": "login_oauth2"
+        }
+      ],
+      "id": "f1155",
+      "settings": [
+        {
+          "id": "firmware",
+          "type": "label",
+          "label": {
+            "en": "Firmware",
+            "sv": "Programvara",
+            "da": "Firmware",
+            "no": "Firmware",
+            "nl": "Firmware"
+          },
+          "value": ""
+        },
+        {
+          "id": "serialNumber",
+          "type": "label",
+          "label": {
+            "en": "Serial number",
+            "sv": "Serienummer",
+            "da": "Serienummer",
+            "no": "Serienummer",
+            "nl": "Serienummer"
+          },
+          "value": ""
+        },
+        {
+          "id": "fetchIntervall",
+          "type": "number",
+          "label": {
+            "en": "Interval in minutes to fetch data",
+            "sv": "Intervall i minuter för hämtning av data",
+            "da": "Interval i minutter for hentning af data",
+            "no": "Intervall i minutter for henting av data",
+            "nl": "Interval in minuten om data op te halen"
+          },
+          "min": 5,
+          "value": 5
+        },
+        {
+          "id": "heating_curve",
+          "type": "number",
+          "label": {
+            "en": "Heating Curve",
+            "sv": "Värmekurva",
+            "no": "Varmekurve",
+            "da": "Varme Kurve",
+            "nl": "Verwarmingscurve"
+          },
+          "value": 5,
+          "min": 0,
+          "max": 15,
+          "step": 1
+        },
+        {
+          "id": "heating_offset",
+          "type": "number",
+          "label": {
+            "en": "Heating Offset",
+            "sv": "Värmejustering",
+            "no": "Varmejustering",
+            "da": "Varmejustering",
+            "nl": "Verwarmingscompensatie"
+          },
+          "value": 0,
+          "min": -10,
+          "max": 10,
+          "step": 1
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Parameter overrides",
+            "sv": "Parameteröverskrivningar",
+            "da": "Parametertilsidesættelser",
+            "no": "Parameteroverstyrelser",
+            "nl": "Parameter overschrijvingen"
+          },
+          "children": [
+            {
+              "id": "override_outdoor_temp",
+              "type": "number",
+              "label": {
+                "en": "Outdoor temperature"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40004)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_supply_line",
+              "type": "number",
+              "label": {
+                "en": "Supply line"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40008)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_return_line",
+              "type": "number",
+              "label": {
+                "en": "Return line"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40012)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_hot_water_top",
+              "type": "number",
+              "label": {
+                "en": "Hot water top"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40013)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_hot_water_charging",
+              "type": "number",
+              "label": {
+                "en": "Hot water charging"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40014)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_room_temp",
+              "type": "number",
+              "label": {
+                "en": "Room temperature"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40033)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_brine_in",
+              "type": "number",
+              "label": {
+                "en": "Brine in"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40015)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_brine_out",
+              "type": "number",
+              "label": {
+                "en": "Brine out"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40016)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_degree_minutes",
+              "type": "number",
+              "label": {
+                "en": "Degree minutes"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40941)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_compressor_freq",
+              "type": "number",
+              "label": {
+                "en": "Compressor frequency"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (41778)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_target_room_temp",
+              "type": "number",
+              "label": {
+                "en": "Target room temperature setpoint"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (47398)"
+              },
+              "value": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": {
         "en": "Nibe F-Series Heatpump",
         "sv": "Nibe F-Series Heatpump",
         "da": "Nibe F-Series Heatpump",
@@ -2584,6 +3032,21 @@
       "units": " ",
       "icon": "/assets/wind.svg"
     },
+    "measure_compressor_starts": {
+      "type": "number",
+      "title": {
+        "en": "Compressor starts",
+        "sv": "Kompressorstarter",
+        "da": "Kompressorstarter",
+        "no": "Kompressorstarter",
+        "nl": "Compressorstarts"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "icon": "/assets/compressor.svg",
+      "insights": true
+    },
     "measure_degree_minutes": {
       "type": "number",
       "title": {
@@ -2712,6 +3175,21 @@
       "icon": "/assets/compressor.svg",
       "units": "char",
       "type": "string"
+    },
+    "status_heatpump": {
+      "type": "string",
+      "title": {
+        "en": "Heat pump status",
+        "sv": "Värmepumpsstatus",
+        "da": "Varmepumpestatus",
+        "no": "Varmepumpestatus",
+        "nl": "Warmtepompstatus"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "icon": "/assets/compressor.svg",
+      "units": "char"
     },
     "time": {
       "title": {
