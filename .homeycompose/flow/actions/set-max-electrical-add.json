@@ -25,7 +25,7 @@
     {
       "type": "device",
       "name": "device",
-      "filter": "driver_id=heatpump"
+      "filter": "driver_id=heatpump|f1155"
     },
     {
       "type": "autocomplete",

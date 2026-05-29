@@ -187,7 +187,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump|s-series"
+            "filter": "driver_id=heatpump|s-series|f1155"
           },
           {
             "type": "dropdown",
@@ -275,7 +275,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump|s-series"
+            "filter": "driver_id=heatpump|s-series|f1155"
           },
           {
             "type": "dropdown",
@@ -363,7 +363,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump|s-series"
+            "filter": "driver_id=heatpump|s-series|f1155"
           },
           {
             "type": "dropdown",
@@ -451,7 +451,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump"
+            "filter": "driver_id=heatpump|f1155"
           },
           {
             "type": "dropdown",
@@ -539,7 +539,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump|s-series"
+            "filter": "driver_id=heatpump|s-series|f1155"
           },
           {
             "type": "dropdown",
@@ -627,7 +627,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump|s-series"
+            "filter": "driver_id=heatpump|s-series|f1155"
           },
           {
             "type": "dropdown",
@@ -708,7 +708,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump"
+            "filter": "driver_id=heatpump|f1155"
           }
         ]
       },
@@ -739,7 +739,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump|s-series"
+            "filter": "driver_id=heatpump|s-series|f1155"
           },
           {
             "type": "dropdown",
@@ -827,7 +827,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump|s-series"
+            "filter": "driver_id=heatpump|s-series|f1155"
           },
           {
             "type": "dropdown",
@@ -912,7 +912,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump"
+            "filter": "driver_id=heatpump|f1155"
           }
         ]
       }
@@ -945,7 +945,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump|s-series"
+            "filter": "driver_id=heatpump|s-series|f1155"
           },
           {
             "type": "number",
@@ -990,7 +990,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump|s-series"
+            "filter": "driver_id=heatpump|s-series|f1155"
           },
           {
             "type": "number",
@@ -1035,7 +1035,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump|s-series"
+            "filter": "driver_id=heatpump|s-series|f1155"
           },
           {
             "type": "number",
@@ -1080,7 +1080,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump"
+            "filter": "driver_id=heatpump|f1155"
           },
           {
             "type": "range",
@@ -1127,7 +1127,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump"
+            "filter": "driver_id=heatpump|f1155"
           },
           {
             "type": "autocomplete",
@@ -1169,7 +1169,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump"
+            "filter": "driver_id=heatpump|f1155"
           },
           {
             "type": "dropdown",
@@ -1225,7 +1225,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump|s-series"
+            "filter": "driver_id=heatpump|s-series|f1155"
           },
           {
             "type": "range",
@@ -1273,7 +1273,7 @@
           {
             "type": "device",
             "name": "device",
-            "filter": "driver_id=heatpump"
+            "filter": "driver_id=heatpump|f1155"
           },
           {
             "type": "dropdown",

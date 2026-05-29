@@ -17,7 +17,7 @@
     {
       "type": "device",
       "name": "device",
-      "filter": "driver_id=heatpump|s-series"
+      "filter": "driver_id=heatpump|s-series|f1155"
     },
     {
       "type": "range",
