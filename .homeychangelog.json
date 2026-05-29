@@ -142,5 +142,8 @@
   },
   "1.11.2": {
     "en": "F1155 driver support"
+  },
+  "1.11.3": {
+    "en": "Added F1155 driver support"
   }
 }
