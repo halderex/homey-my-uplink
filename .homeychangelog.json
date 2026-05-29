@@ -136,5 +136,8 @@
   },
   "1.11.0": {
     "en": "Added F1155 device"
+  },
+  "1.11.1": {
+    "en": "Added F1155 Driver"
   }
 }
