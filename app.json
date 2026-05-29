@@ -3263,6 +3263,7 @@
         "nl": "Huidige pompsnelheid"
       },
       "units": "%",
+      "insights": true,
       "icon": "/assets/fan_speed.svg"
     },
     "set_max_electrical_add": {
