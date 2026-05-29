@@ -8,6 +8,7 @@ class F1155Device extends OAuth2Device {
 
     async onOAuth2Init() {
         try {
+            
             this.deviceId = this.getData().id;
             this.pollInterval = await this.getSetting('fetchIntervall') || 5;
 
@@ -16,6 +17,14 @@ class F1155Device extends OAuth2Device {
 
             this.requestQueue = new RequestQueueHelper(this);
             this.buildParams(await this.getSettings());
+
+            const store = this.getStore();
+            if (store.firmwareVersion || store.serialNumber) {
+                await this.setSettings({
+                    firmware: store.firmwareVersion || '',
+                    serialNumber: store.serialNumber || '',
+                });
+            }
 
             await this.fetchAndApplyData();
             await this.registerCapabilityListeners();
@@ -39,9 +48,21 @@ class F1155Device extends OAuth2Device {
             ROOM_TEMP:              resolveParam('override_room_temp',           F1155Parameters.ROOM_TEMP),
             BRINE_IN:               resolveParam('override_brine_in',            F1155Parameters.BRINE_IN),
             BRINE_OUT:              resolveParam('override_brine_out',           F1155Parameters.BRINE_OUT),
-            DEGREE_MINUTES:         resolveParam('override_degree_minutes',      F1155Parameters.DEGREE_MINUTES),
-            COMPRESSOR_FREQUENCY:   resolveParam('override_compressor_freq',     F1155Parameters.COMPRESSOR_FREQUENCY),
-            TARGET_ROOM_TEMP:       resolveParam('override_target_room_temp',    F1155Parameters.TARGET_ROOM_TEMP),
+            DEGREE_MINUTES:             resolveParam('override_degree_minutes',          F1155Parameters.DEGREE_MINUTES),
+            COMPRESSOR_FREQUENCY:       resolveParam('override_compressor_freq',          F1155Parameters.COMPRESSOR_FREQUENCY),
+            TARGET_ROOM_TEMP:           resolveParam('override_target_room_temp',         F1155Parameters.TARGET_ROOM_TEMP),
+            CONDENSER:                  resolveParam('override_condenser',               F1155Parameters.CONDENSER),
+            SUCTION_GAS:                resolveParam('override_suction_gas',             F1155Parameters.SUCTION_GAS),
+            CALCULATED_SUPPLY_LINE:     resolveParam('override_calculated_supply_line',  F1155Parameters.CALCULATED_SUPPLY_LINE),
+            CURRENT_BE1:                resolveParam('override_current_be1',             F1155Parameters.CURRENT_BE1),
+            CURRENT_BE2:                resolveParam('override_current_be2',             F1155Parameters.CURRENT_BE2),
+            CURRENT_BE3:                resolveParam('override_current_be3',             F1155Parameters.CURRENT_BE3),
+            COMPRESSOR_STATUS:          resolveParam('override_compressor_status',        F1155Parameters.COMPRESSOR_STATUS),
+            COMPRESSOR_STARTS:          resolveParam('override_compressor_starts',        F1155Parameters.COMPRESSOR_STARTS),
+            HEATING_MEDIUM_PUMP_SPEED:  resolveParam('override_heating_medium_pump',     F1155Parameters.HEATING_MEDIUM_PUMP_SPEED),
+            BRINE_PUMP_SPEED:           resolveParam('override_brine_pump_speed',         F1155Parameters.BRINE_PUMP_SPEED),
+            EXT_ENERGY_METER:           resolveParam('override_ext_energy_meter',         F1155Parameters.EXT_ENERGY_METER),
+            TEMPORARY_LUX:              resolveParam('override_temporary_lux',            F1155Parameters.TEMPORARY_LUX),
         };
     }
 

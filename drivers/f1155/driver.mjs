@@ -9,15 +9,19 @@ class F1155Driver extends OAuth2Driver {
         const systems = await oAuth2Client.getSystems();
 
         return systems.systems.flatMap(system =>
-            system.devices.map(device => ({
-                name: device.product.name,
-                data: {
-                    id: device.id,
-                },
-                store: {
-                    systemId: system.systemId,
-                },
-            }))
+            system.devices
+                .filter(device => device.product.name.toUpperCase().includes('F1155'))
+                .map(device => ({
+                    name: device.product.name,
+                    data: {
+                        id: device.id,
+                    },
+                    store: {
+                        systemId: system.systemId,
+                        firmwareVersion: device.currentFwVersion,
+                        serialNumber: device.product.serialNumber,
+                    },
+                }))
         );
     }
 }

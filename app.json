@@ -1756,6 +1756,138 @@
                 "en": "Leave 0 to use the default (47398)"
               },
               "value": 0
+            },
+            {
+              "id": "override_condenser",
+              "type": "number",
+              "label": {
+                "en": "Condenser temperature"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40017)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_suction_gas",
+              "type": "number",
+              "label": {
+                "en": "Suction gas temperature"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40022)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_calculated_supply_line",
+              "type": "number",
+              "label": {
+                "en": "Calculated supply line temperature"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (43009)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_current_be1",
+              "type": "number",
+              "label": {
+                "en": "Current phase 1 (BE1)"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40083)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_current_be2",
+              "type": "number",
+              "label": {
+                "en": "Current phase 2 (BE2)"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40081)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_current_be3",
+              "type": "number",
+              "label": {
+                "en": "Current phase 3 (BE3)"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40079)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_compressor_status",
+              "type": "number",
+              "label": {
+                "en": "Compressor status"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (43427)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_compressor_starts",
+              "type": "number",
+              "label": {
+                "en": "Compressor starts"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (43416)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_heating_medium_pump",
+              "type": "number",
+              "label": {
+                "en": "Heating medium pump speed"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (43437)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_brine_pump_speed",
+              "type": "number",
+              "label": {
+                "en": "Brine pump speed"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (43439)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_ext_energy_meter",
+              "type": "number",
+              "label": {
+                "en": "External energy meter"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (40995)"
+              },
+              "value": 0
+            },
+            {
+              "id": "override_temporary_lux",
+              "type": "number",
+              "label": {
+                "en": "Temporary lux"
+              },
+              "hint": {
+                "en": "Leave 0 to use the default (50004)"
+              },
+              "value": 0
             }
           ]
         }
