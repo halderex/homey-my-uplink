@@ -14,16 +14,19 @@ class SSerierDriver extends OAuth2Driver {
   async onPairListDevices({oAuth2Client}) {
     const systems = await oAuth2Client.getSystems();
 
+    // Per pump we offer three pairing options (opt-in energy split): the normal single device, plus
+    // a Heating and a Hot water consumer device. Pick the single OR the two role devices — the role
+    // pair splits the pump's energy by operating priority so Homey Energy can cost the two
+    // categories separately. (Spike: a pair-view toggle is the eventual UX; selection is simpler.)
     return systems.systems.flatMap(system =>
-        system.devices.map(device => ({
-          name: device.product.name,
-          data: {
-            id: device.id,
-          },
-          store: {
-            systemId: system.systemId,
-          },
-        }))
+        system.devices.flatMap(device => {
+          const store = { systemId: system.systemId };
+          return [
+            { name: device.product.name, data: { id: device.id }, store },
+            { name: `${device.product.name} — Heating`, data: { id: device.id, role: 'heating' }, store },
+            { name: `${device.product.name} — Hot water`, data: { id: device.id, role: 'hotwater' }, store },
+          ];
+        })
     );
   }
 }

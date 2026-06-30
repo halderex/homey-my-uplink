@@ -8,6 +8,53 @@ import SSeriesParameterIds from "../../lib/models/s-series-parameter-enum.mjs";
 import sSeriesParameterMap from "../../lib/models/s-series-parameter-map.mjs";
 import RequestQueueHelper from "../../lib/helpers/request-queue.mjs";
 import {buildEffectiveParameters, sSeriesOverrideConfig} from "../../lib/helpers/parameter-override.mjs";
+import {EnergySplitCalculator} from "../../lib/helpers/energy-split-calculator.mjs";
+
+/**
+ * Opt-in "energy split" roles. When a device is paired with data.role set to one of these, the pump
+ * is represented as two Homey consumer devices (heating + hot water) so Homey Energy can cost the
+ * two categories separately. Each role keeps a focused capability set and a restricted monitored
+ * parameter list (so the dynamic capability management never re-adds the other role's sensors);
+ * measure_power / meter_power are driven by EnergySplitCalculator instead of the single-device path.
+ * LIFETIME_ENERGY_CONSUMED (28393) stays in every role's list so the anchor can read it.
+ */
+const ROLE_CONFIG = {
+    heating: {
+        deviceClass: 'heatpump',
+        isHotWater: false,
+        capabilities: [
+            'measure_power', 'meter_power',
+            'target_temperature.room', 'measure_temperature.room',
+            'measure_temperature.return_line', 'measure_temperature.outdoor',
+            'measure_temperature.average_outdoor', 'measure_temperature.supply_line',
+            'measure_temperature.suction_gas', 'measure_frequency.compressor',
+            'status_compressor', 'measure_degree_minutes',
+        ],
+        monitored: [
+            SSeriesParameterIds.OUTDOOR_TEMP, SSeriesParameterIds.AVERAGE_OUTDOOR_TEMP,
+            SSeriesParameterIds.SUPPLY_LINE_TEMP, SSeriesParameterIds.RETURN_TEMP,
+            SSeriesParameterIds.SUPPLY_LINE, SSeriesParameterIds.SUCTION_GAS,
+            SSeriesParameterIds.DEGREE_MINUTES, SSeriesParameterIds.CURRENT_COMPRESSOR_FREQ,
+            SSeriesParameterIds.COMPRESSOR_STATUS, SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED,
+        ],
+    },
+    hotwater: {
+        deviceClass: 'boiler',
+        isHotWater: true,
+        capabilities: [
+            'measure_power', 'meter_power',
+            'measure_temperature.hot_water_top', 'measure_temperature.hot_water_charging',
+            'state_button.hot_water_boost', 'state_button.quick_water_heating',
+        ],
+        monitored: [
+            SSeriesParameterIds.HOT_WATER_TOP, SSeriesParameterIds.HOT_WATER_CHARGING,
+            SSeriesParameterIds.HOT_WATER_BOOST, SSeriesParameterIds.QUICK_WATER_HEATING,
+            SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED,
+        ],
+    },
+};
+
+const SPLIT_FAST_POLL_MS = 60 * 1000;
 
 /**
  * Represents a Nibe S-Series Heat Pump device in Homey
@@ -69,6 +116,16 @@ ${"#".repeat(deviceInfoHeader.length)}
             this.log(infoHeader);
             this.log(`Device ${this.deviceId} initialized (S-Series)`);
 
+            // Opt-in energy split: a role-tagged device represents one category (heating / hot water)
+            const role = this.getData().role;
+            this._role = ROLE_CONFIG[role] ? role : null;
+            this._split = this._role !== null;
+            if (this._split) {
+                const cls = ROLE_CONFIG[this._role].deviceClass;
+                if (this.getClass() !== cls) await this.setClass(cls).catch((e) => this.error(`setClass: ${e.message}`));
+                this.log(`Energy-split role: ${this._role} (class ${cls})`);
+            }
+
             // Initialize services
             this.settingsManager = new SettingsManager(this, this.oAuth2Client);
             this.powerCalculator = new PowerCalculator();
@@ -82,6 +139,14 @@ ${"#".repeat(deviceInfoHeader.length)}
 
             // Build effective parameter map (applies user overrides from settings)
             this._buildEffectiveParameters();
+
+            // For a split role, fetch only this role's parameters and prune foreign capabilities so
+            // the dynamic capability management never re-adds the other category's sensors.
+            if (this._split) {
+                const roleCfg = ROLE_CONFIG[this._role];
+                this._effectiveMonitored = roleCfg.monitored.slice();
+                await this._pruneToRole(roleCfg);
+            }
 
             // Migrate: remove deprecated capabilities from UI for existing devices
             for (const cap of this._internalCapabilities) {
@@ -102,36 +167,47 @@ ${"#".repeat(deviceInfoHeader.length)}
                 }
             }
 
-            // Check if we have any power source and add measure_power if needed
-            const hasCurrentCapabilities =
-                this.hasCapability('measure_current.one') ||
-                this.hasCapability('measure_current.two') ||
-                this.hasCapability('measure_current.three');
-            
-            const hasSystemPower = this._internalValues?.get('measure_power.system') != null;
-            const hasLifetimeEnergy = this._internalValues?.get('meter_power.lifetime_energy_consumed') != null;
-
-            if (hasCurrentCapabilities || hasLifetimeEnergy || hasSystemPower) {
-                if (!this.hasCapability('measure_power')) {
-                    this.log('Adding measure_power capability');
-                    await this.addCapability('measure_power');
+            if (this._split) {
+                // measure_power / meter_power are owned by the split calculator (priority-weighted
+                // attribution of 22130, anchored to the real 28393 meter).
+                for (const cap of ['measure_power', 'meter_power']) {
+                    if (!this.hasCapability(cap)) await this.addCapability(cap);
                 }
-                // Now update power value
-                await this.powerCalculator.updateDevicePower(this);
+                this.energySplit = new EnergySplitCalculator(this, { isHotWater: ROLE_CONFIG[this._role].isHotWater });
+                await this.energySplit.restore();
+                await this.energySplit.fastPoll();
             } else {
-                this.log('No current sensors, system power, or lifetime energy found, skipping power calculation');
-                if (this.hasCapability('measure_power')) {
-                    await this.removeCapability('measure_power');
-                }
-            }
+                // Check if we have any power source and add measure_power if needed
+                const hasCurrentCapabilities =
+                    this.hasCapability('measure_current.one') ||
+                    this.hasCapability('measure_current.two') ||
+                    this.hasCapability('measure_current.three');
 
-            // Use system-reported lifetime energy as meter_power for Homey energy tracking
-            if (hasLifetimeEnergy) {
-                if (!this.hasCapability('meter_power')) {
-                    this.log('Adding meter_power capability');
-                    await this.addCapability('meter_power');
+                const hasSystemPower = this._internalValues?.get('measure_power.system') != null;
+                const hasLifetimeEnergy = this._internalValues?.get('meter_power.lifetime_energy_consumed') != null;
+
+                if (hasCurrentCapabilities || hasLifetimeEnergy || hasSystemPower) {
+                    if (!this.hasCapability('measure_power')) {
+                        this.log('Adding measure_power capability');
+                        await this.addCapability('measure_power');
+                    }
+                    // Now update power value
+                    await this.powerCalculator.updateDevicePower(this);
+                } else {
+                    this.log('No current sensors, system power, or lifetime energy found, skipping power calculation');
+                    if (this.hasCapability('measure_power')) {
+                        await this.removeCapability('measure_power');
+                    }
                 }
-                await this.updateMeterPowerFromSystem();
+
+                // Use system-reported lifetime energy as meter_power for Homey energy tracking
+                if (hasLifetimeEnergy) {
+                    if (!this.hasCapability('meter_power')) {
+                        this.log('Adding meter_power capability');
+                        await this.addCapability('meter_power');
+                    }
+                    await this.updateMeterPowerFromSystem();
+                }
             }
 
             await this.settingsManager.initializeSettings();
@@ -177,14 +253,24 @@ ${"#".repeat(deviceInfoHeader.length)}
             this.log(`Fetching data for device ${this.deviceId}`);
             try {
                 await this.fetchAndSetDataPoints(this._effectiveMonitored);
-                await this.powerCalculator.updateDevicePower(this);
-                await this.updateMeterPowerFromSystem();
+                if (this._split) {
+                    // Anchor the split meters to the real 28393 total that the fetch just refreshed.
+                    await this.energySplit.anchor();
+                } else {
+                    await this.powerCalculator.updateDevicePower(this);
+                    await this.updateMeterPowerFromSystem();
+                }
                 await this.settingsManager.updateHeatpumpSettings();
                 await this.refreshZoneData();
             } catch (error) {
                 this.error(`Error during polling: ${error.message}`);
             }
         }, 1000 * 60 * this.pollInterval);
+
+        // Split devices integrate live power every minute for smooth, sub-kWh meter_power.
+        if (this._split) {
+            this.splitFastTimer = this.homey.setInterval(() => this.energySplit.fastPoll(), SPLIT_FAST_POLL_MS);
+        }
     }
 
     /**
@@ -195,6 +281,8 @@ ${"#".repeat(deviceInfoHeader.length)}
         for (const [capability, parameterId] of Object.entries(SSeriesDevice.CAPABILITY_PARAMETER_MAP)) {
             // Skip room temperature which is handled separately
             if (capability === 'target_temperature.room') continue;
+            // A role device only has its own subset of capabilities.
+            if (!this.hasCapability(capability)) continue;
 
             this.registerCapabilityListener(capability, async (value) => {
                 try {
@@ -209,6 +297,7 @@ ${"#".repeat(deviceInfoHeader.length)}
         }
 
         // Special handling for room temperature which uses zones - keep this as is
+        if (this.hasCapability('target_temperature.room'))
         this.registerCapabilityListener('target_temperature.room', async (value) => {
             try {
                 this.log(`Setting room temperature to ${value}`);
@@ -317,18 +406,22 @@ ${"#".repeat(deviceInfoHeader.length)}
                 }
             }
 
-            // Check if current sensors, system power, or lifetime energy exist to justify keeping measure_power
-            const hasCurrent = returnedParameterIds.has(SSeriesParameterIds.CURRENT_1) ||
-                returnedParameterIds.has(SSeriesParameterIds.CURRENT_2) ||
-                returnedParameterIds.has(SSeriesParameterIds.CURRENT_3);
-            
-            const hasLifetimeEnergy = returnedParameterIds.has(SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED);
-            const hasSystemPower = returnedParameterIds.has(SSeriesParameterIds.SYSTEM_POWER_CONSUMPTION);
+            // Split devices own measure_power via EnergySplitCalculator — skip the single-device
+            // power-source bookkeeping below.
+            if (!this._split) {
+                // Check if current sensors, system power, or lifetime energy exist to justify keeping measure_power
+                const hasCurrent = returnedParameterIds.has(SSeriesParameterIds.CURRENT_1) ||
+                    returnedParameterIds.has(SSeriesParameterIds.CURRENT_2) ||
+                    returnedParameterIds.has(SSeriesParameterIds.CURRENT_3);
 
-            // Keep measure_power if we have current sensors, system power OR lifetime energy
-            if (!hasCurrent && !hasSystemPower && !hasLifetimeEnergy && this.hasCapability('measure_power')) {
-                this.log('No current sensors, system power, or lifetime energy found, removing measure_power capability');
-                await this.removeCapability('measure_power');
+                const hasLifetimeEnergy = returnedParameterIds.has(SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED);
+                const hasSystemPower = returnedParameterIds.has(SSeriesParameterIds.SYSTEM_POWER_CONSUMPTION);
+
+                // Keep measure_power if we have current sensors, system power OR lifetime energy
+                if (!hasCurrent && !hasSystemPower && !hasLifetimeEnergy && this.hasCapability('measure_power')) {
+                    this.log('No current sensors, system power, or lifetime energy found, removing measure_power capability');
+                    await this.removeCapability('measure_power');
+                }
             }
 
             // For target_temperature.room and measure_temperature.room, we'll check for zones in a separate method
@@ -406,6 +499,8 @@ ${"#".repeat(deviceInfoHeader.length)}
      * Refreshes zone data and updates related capabilities
      */
     async refreshZoneData() {
+        // The hot-water role is a boiler — it has no room/zone temperature or setpoint.
+        if (this._role === 'hotwater') return;
         try {
             const zones = await this.oAuth2Client.getSmartHomeZones(this.deviceId);
 
@@ -596,12 +691,37 @@ ${"#".repeat(deviceInfoHeader.length)}
     }
 
     /**
+     * Remove any capability not in this role's set (keeping internal-only capabilities), and ensure
+     * measure_power / meter_power exist. Lets a freshly paired role device shed the full compose
+     * capability list down to just its category.
+     * @param {object} roleCfg - the ROLE_CONFIG entry for this device's role
+     */
+    async _pruneToRole(roleCfg) {
+        const keep = new Set(roleCfg.capabilities);
+        for (const cap of this.getCapabilities()) {
+            if (keep.has(cap) || this._internalCapabilities?.has(cap)) continue;
+            try {
+                await this.removeCapability(cap);
+                this.log(`[split] pruned capability: ${cap}`);
+            } catch (e) {
+                this.error(`[split] prune ${cap}: ${e.message}`);
+            }
+        }
+        for (const cap of ['measure_power', 'meter_power']) {
+            if (!this.hasCapability(cap)) await this.addCapability(cap).catch(() => {});
+        }
+    }
+
+    /**
      * Clean up when device is deleted
      */
     async onDeleted() {
         this.log(`Device ${this.deviceId} deleted, cleaning up`);
         if (this.pollTimer) {
             this.homey.clearInterval(this.pollTimer);
+        }
+        if (this.splitFastTimer) {
+            this.homey.clearInterval(this.splitFastTimer);
         }
         if (this.requestQueue) {
             this.requestQueue.clearQueue();
