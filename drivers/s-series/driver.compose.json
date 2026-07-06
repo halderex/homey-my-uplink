@@ -156,6 +156,24 @@
         "nl": "Compressor bedrijfstijd"
       }
     },
+    "measure_temperature.discharge": {
+      "title": {
+        "en": "Hot gas (BT14)",
+        "sv": "Hetgas (BT14)",
+        "da": "Hedgas (BT14)",
+        "no": "Hetgass (BT14)",
+        "nl": "Heet gas (BT14)"
+      }
+    },
+    "measure_temperature.liquid_line": {
+      "title": {
+        "en": "Liquid line (BT15)",
+        "sv": "Vätskeledning (BT15)",
+        "da": "Væskeledning (BT15)",
+        "no": "Væskeledning (BT15)",
+        "nl": "Vloeistofleiding (BT15)"
+      }
+    },
     "measure_temperature.calculated_supply": {
       "title": {
         "en": "Calculated supply line",
