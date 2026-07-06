@@ -156,6 +156,33 @@
         "nl": "Compressor bedrijfstijd"
       }
     },
+    "measure_temperature.calculated_supply": {
+      "title": {
+        "en": "Calculated supply line",
+        "sv": "Beräknad framledning",
+        "da": "Beregnet fremløb",
+        "no": "Beregnet tilførselsledning",
+        "nl": "Berekende aanvoerleiding"
+      }
+    },
+    "measure_power.internal_addition": {
+      "title": {
+        "en": "Power internal add. heat",
+        "sv": "Effekt intern tillsats",
+        "da": "Effekt intern tilsætning",
+        "no": "Effekt intern tilsetning",
+        "nl": "Vermogen interne bijverwarming"
+      }
+    },
+    "time.add_heat_heating": {
+      "title": {
+        "en": "Add. heat time (heating)",
+        "sv": "Tillsats drifttid (värme)",
+        "da": "Tilskudsdrifttid (varme)",
+        "no": "Tilskuddsdriftstid (varme)",
+        "nl": "Bijverwarming looptijd (verwarming)"
+      }
+    },
     "time.hot_water_add_heat": {
       "title": {
         "en": "Add. heat time (hot water)",

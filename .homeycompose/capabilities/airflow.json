@@ -1,0 +1,23 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Airflow",
+    "sv": "Luftflöde",
+    "da": "Luftstrøm",
+    "no": "Luftstrøm",
+    "nl": "Luchtstroom"
+  },
+  "units": {
+    "en": "m³/h",
+    "sv": "m³/h",
+    "da": "m³/h",
+    "no": "m³/h",
+    "nl": "m³/h"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "insights": true,
+  "decimals": 1,
+  "icon": "/assets/wind.svg"
+}

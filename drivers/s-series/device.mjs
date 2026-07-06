@@ -27,27 +27,39 @@ const ROLE_CONFIG = {
     heating: {
         deviceClass: 'heatpump',
         isHotWater: false,
+        // Capability order matches com.nibe.eu.myuplink's heating device tile-for-tile (its
+        // ROLES.heating.capabilities order = its displayed order): room temp, target temp,
+        // priority, compressor freq, supply/return/calculated-supply/outdoor temps, pump speed,
+        // airflow, power, meter, additional heat power, add-heat runtime. Capabilities this app
+        // has that com.nibe.eu.myuplink's heating device doesn't are appended last.
         capabilities: [
+            'measure_temperature.room', 'target_temperature.room',
+            'status_operation_priority', 'measure_frequency.compressor',
+            'measure_temperature.supply_line', 'measure_temperature.return_line',
+            'measure_temperature.calculated_supply', 'measure_temperature.outdoor',
+            'measure_pump_speed.heating_medium', 'airflow',
             'measure_power', 'meter_power',
-            'target_temperature.room', 'measure_temperature.room',
-            'measure_temperature.return_line', 'measure_temperature.outdoor',
-            'measure_temperature.average_outdoor', 'measure_temperature.supply_line',
-            'measure_temperature.suction_gas', 'measure_temperature.discharge',
-            'measure_temperature.liquid_line', 'measure_frequency.compressor',
-            'status_compressor', 'status_operation_priority', 'status_electric_addition',
-            'measure_degree_minutes', 'measure_pump_speed.heating_medium',
-            'measure_compressor_starts', 'time.compressor_runtime',
+            'measure_power.internal_addition', 'time.add_heat_heating',
+            // Additional, existing data points (not in com.nibe.eu.myuplink):
+            'status_compressor', 'measure_degree_minutes',
+            'measure_temperature.discharge', 'measure_temperature.liquid_line',
+            'measure_temperature.average_outdoor', 'measure_temperature.suction_gas',
+            'measure_compressor_starts', 'time.compressor_runtime', 'status_electric_addition',
         ],
+        // measure_temperature.room / target_temperature.room are NOT fetched here — refreshZoneData()
+        // (called at the end of fetchAndSetDataPoints, for the heating role) sources both from
+        // getSmartHomeZones() instead, matching how the stock single device already gets them.
         monitored: [
-            SSeriesParameterIds.OUTDOOR_TEMP, SSeriesParameterIds.AVERAGE_OUTDOOR_TEMP,
+            SSeriesParameterIds.OPERATION_PRIORITY, SSeriesParameterIds.CURRENT_COMPRESSOR_FREQ,
             SSeriesParameterIds.SUPPLY_LINE_TEMP, SSeriesParameterIds.RETURN_TEMP,
-            SSeriesParameterIds.SUPPLY_LINE, SSeriesParameterIds.SUCTION_GAS,
+            SSeriesParameterIds.CALCULATED_SUPPLY_LINE, SSeriesParameterIds.OUTDOOR_TEMP,
+            SSeriesParameterIds.HEATING_MEDIUM_PUMP_SPEED, SSeriesParameterIds.AIRFLOW,
+            SSeriesParameterIds.INTERNAL_ADD_HEAT_POWER, SSeriesParameterIds.ADD_HEAT_TIME_HEATING,
+            SSeriesParameterIds.COMPRESSOR_STATUS, SSeriesParameterIds.DEGREE_MINUTES,
             SSeriesParameterIds.DISCHARGE_TEMP, SSeriesParameterIds.LIQUID_LINE,
-            SSeriesParameterIds.DEGREE_MINUTES, SSeriesParameterIds.CURRENT_COMPRESSOR_FREQ,
-            SSeriesParameterIds.COMPRESSOR_STATUS, SSeriesParameterIds.OPERATION_PRIORITY,
-            SSeriesParameterIds.ELECTRIC_ADDITION_STATUS, SSeriesParameterIds.HEATING_MEDIUM_PUMP_SPEED,
+            SSeriesParameterIds.AVERAGE_OUTDOOR_TEMP, SSeriesParameterIds.SUCTION_GAS,
             SSeriesParameterIds.COMPRESSOR_STARTS, SSeriesParameterIds.TOTAL_COMPRESSOR_RUNTIME,
-            SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED,
+            SSeriesParameterIds.ELECTRIC_ADDITION_STATUS, SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED,
         ],
     },
     hotwater: {
@@ -705,9 +717,13 @@ ${"#".repeat(deviceInfoHeader.length)}
     }
 
     /**
-     * Remove any capability not in this role's set (keeping internal-only capabilities), and ensure
-     * measure_power / meter_power exist. Lets a freshly paired role device shed the full compose
-     * capability list down to just its category.
+     * Remove any capability not in this role's set (keeping internal-only capabilities), then make
+     * sure the remaining ones are in exactly roleCfg.capabilities' declared order — matching
+     * com.nibe.eu.myuplink's tile layout tile-for-tile. Homey's addCapability() only appends, it
+     * never reorders an existing device's capabilities, so if this device's current order doesn't
+     * match (e.g. after a code update changed the order), rebuild it: remove everything in the
+     * role's set and re-add in the declared sequence. This is a one-time reset per order change —
+     * values repopulate from the fetch that immediately follows in onOAuth2Init.
      * @param {object} roleCfg - the ROLE_CONFIG entry for this device's role
      */
     async _pruneToRole(roleCfg) {
@@ -721,8 +737,23 @@ ${"#".repeat(deviceInfoHeader.length)}
                 this.error(`[split] prune ${cap}: ${e.message}`);
             }
         }
-        for (const cap of ['measure_power', 'meter_power']) {
-            if (!this.hasCapability(cap)) await this.addCapability(cap).catch(() => {});
+
+        const desired = roleCfg.capabilities;
+        const current = this.getCapabilities().filter((cap) => keep.has(cap));
+        const inOrder = current.length === desired.length && current.every((cap, i) => cap === desired[i]);
+        if (inOrder) {
+            for (const cap of desired) {
+                if (!this.hasCapability(cap)) await this.addCapability(cap).catch((e) => this.error(`[split] add ${cap}: ${e.message}`));
+            }
+            return;
+        }
+
+        this.log(`[split] capability order changed, rebuilding: [${current.join(',')}] -> [${desired.join(',')}]`);
+        for (const cap of current) {
+            await this.removeCapability(cap).catch((e) => this.error(`[split] reorder-remove ${cap}: ${e.message}`));
+        }
+        for (const cap of desired) {
+            await this.addCapability(cap).catch((e) => this.error(`[split] reorder-add ${cap}: ${e.message}`));
         }
     }
 

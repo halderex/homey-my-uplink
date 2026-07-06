@@ -2720,6 +2720,33 @@
             "nl": "Compressor bedrijfstijd"
           }
         },
+        "measure_temperature.calculated_supply": {
+          "title": {
+            "en": "Calculated supply line",
+            "sv": "Beräknad framledning",
+            "da": "Beregnet fremløb",
+            "no": "Beregnet tilførselsledning",
+            "nl": "Berekende aanvoerleiding"
+          }
+        },
+        "measure_power.internal_addition": {
+          "title": {
+            "en": "Power internal add. heat",
+            "sv": "Effekt intern tillsats",
+            "da": "Effekt intern tilsætning",
+            "no": "Effekt intern tilsetning",
+            "nl": "Vermogen interne bijverwarming"
+          }
+        },
+        "time.add_heat_heating": {
+          "title": {
+            "en": "Add. heat time (heating)",
+            "sv": "Tillsats drifttid (värme)",
+            "da": "Tilskudsdrifttid (varme)",
+            "no": "Tilskuddsdriftstid (varme)",
+            "nl": "Bijverwarming looptijd (verwarming)"
+          }
+        },
         "time.hot_water_add_heat": {
           "title": {
             "en": "Add. heat time (hot water)",
@@ -3109,6 +3136,29 @@
     }
   ],
   "capabilities": {
+    "airflow": {
+      "type": "number",
+      "title": {
+        "en": "Airflow",
+        "sv": "Luftflöde",
+        "da": "Luftstrøm",
+        "no": "Luftstrøm",
+        "nl": "Luchtstroom"
+      },
+      "units": {
+        "en": "m³/h",
+        "sv": "m³/h",
+        "da": "m³/h",
+        "no": "m³/h",
+        "nl": "m³/h"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "insights": true,
+      "decimals": 1,
+      "icon": "/assets/wind.svg"
+    },
     "heater_operational_mode": {
       "type": "string",
       "title": {
