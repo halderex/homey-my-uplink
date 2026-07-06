@@ -137,6 +137,33 @@
         "no": "Romtemperatur",
         "nl": "Kamertemperatuur"
       }
+    },
+    "measure_pump_speed.heating_medium": {
+      "title": {
+        "en": "Heating medium pump (GP1)",
+        "sv": "Värmebärarpump (GP1)",
+        "da": "Varmemedium pumpe (GP1)",
+        "no": "Varmemedium pumpe (GP1)",
+        "nl": "Verwarmingsmedium pomp (GP1)"
+      }
+    },
+    "time.compressor_runtime": {
+      "title": {
+        "en": "Compressor runtime",
+        "sv": "Kompressordrifttid",
+        "da": "Kompressordriftstid",
+        "no": "Kompressordriftstid",
+        "nl": "Compressor bedrijfstijd"
+      }
+    },
+    "time.compressor_hot_water_runtime": {
+      "title": {
+        "en": "Compressor runtime, hot water",
+        "sv": "Kompressordrifttid, varmvatten",
+        "da": "Kompressordriftstid, varmt vand",
+        "no": "Kompressordriftstid, varmtvann",
+        "nl": "Compressor bedrijfstijd, warm water"
+      }
     }
   },
   "platforms": [

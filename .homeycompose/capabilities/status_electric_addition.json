@@ -1,0 +1,15 @@
+{
+  "title": {
+    "en": "Electric addition",
+    "sv": "Eltillskott",
+    "da": "Eltilskud",
+    "no": "Eltilskudd",
+    "nl": "Elektrische toevoeging"
+  },
+  "uiComponent": "sensor",
+  "setable": false,
+  "getable": true,
+  "icon": "/assets/electric_meter.svg",
+  "units": "char",
+  "type": "string"
+}

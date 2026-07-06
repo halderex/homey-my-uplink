@@ -2701,6 +2701,33 @@
             "no": "Romtemperatur",
             "nl": "Kamertemperatuur"
           }
+        },
+        "measure_pump_speed.heating_medium": {
+          "title": {
+            "en": "Heating medium pump (GP1)",
+            "sv": "Värmebärarpump (GP1)",
+            "da": "Varmemedium pumpe (GP1)",
+            "no": "Varmemedium pumpe (GP1)",
+            "nl": "Verwarmingsmedium pomp (GP1)"
+          }
+        },
+        "time.compressor_runtime": {
+          "title": {
+            "en": "Compressor runtime",
+            "sv": "Kompressordrifttid",
+            "da": "Kompressordriftstid",
+            "no": "Kompressordriftstid",
+            "nl": "Compressor bedrijfstijd"
+          }
+        },
+        "time.compressor_hot_water_runtime": {
+          "title": {
+            "en": "Compressor runtime, hot water",
+            "sv": "Kompressordrifttid, varmvatten",
+            "da": "Kompressordriftstid, varmt vand",
+            "no": "Kompressordriftstid, varmtvann",
+            "nl": "Compressor bedrijfstijd, warm water"
+          }
         }
       },
       "platforms": [
@@ -3309,6 +3336,21 @@
       "units": "char",
       "type": "string"
     },
+    "status_electric_addition": {
+      "title": {
+        "en": "Electric addition",
+        "sv": "Eltillskott",
+        "da": "Eltilskud",
+        "no": "Eltilskudd",
+        "nl": "Elektrische toevoeging"
+      },
+      "uiComponent": "sensor",
+      "setable": false,
+      "getable": true,
+      "icon": "/assets/electric_meter.svg",
+      "units": "char",
+      "type": "string"
+    },
     "status_heatpump": {
       "type": "string",
       "title": {
@@ -3323,6 +3365,21 @@
       "setable": false,
       "icon": "/assets/compressor.svg",
       "units": "char"
+    },
+    "status_operation_priority": {
+      "title": {
+        "en": "Priority",
+        "sv": "Prioritet",
+        "da": "Prioritet",
+        "no": "Prioritet",
+        "nl": "Prioriteit"
+      },
+      "uiComponent": "sensor",
+      "setable": false,
+      "getable": true,
+      "icon": "/assets/generic.svg",
+      "units": "char",
+      "type": "string"
     },
     "time": {
       "title": {

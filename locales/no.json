@@ -56,6 +56,12 @@
   "Acc. block.": "tilbehør blokkert",
   "initiating": "initialiserer",
   "pool 2": "basseng 2",
+  "Cooling": "kjøling",
+  "cooling": "kjøling",
+  "Transfer": "overføring",
+  "transfer": "overføring",
+  "Ext. hot water": "eksternt varmtvann",
+  "External hot water": "eksternt varmtvann",
   "com.err.slave": "kommunikasjonsfeil slave",
   "Com.flt GP12": "kommunikasjonsfeil GP12",
   "not docked": "ikke tilkoblet"

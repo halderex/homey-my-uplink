@@ -56,6 +56,12 @@
   "Acc. block.": "accessoire geblokkeerd",
   "initiating": "initialiseren",
   "pool 2": "zwembad 2",
+  "Cooling": "koeling",
+  "cooling": "koeling",
+  "Transfer": "overdracht",
+  "transfer": "overdracht",
+  "Ext. hot water": "extern warm water",
+  "External hot water": "extern warm water",
   "com.err.slave": "communicatiefout slave",
   "Com.flt GP12": "communicatiefout GP12",
   "not docked": "niet aangesloten"

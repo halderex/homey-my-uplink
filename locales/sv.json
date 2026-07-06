@@ -56,6 +56,12 @@
   "Acc. block.": "tillbehör blockerat",
   "initiating": "initierar",
   "pool 2": "pool 2",
+  "Cooling": "kyla",
+  "cooling": "kyla",
+  "Transfer": "överföring",
+  "transfer": "överföring",
+  "Ext. hot water": "externt varmvatten",
+  "External hot water": "externt varmvatten",
   "com.err.slave": "kommunikationsfel slav",
   "Com.flt GP12": "kommunikationsfel GP12",
   "not docked": "ej ansluten"

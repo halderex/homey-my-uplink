@@ -18,6 +18,11 @@ import {EnergySplitCalculator} from "../../lib/helpers/energy-split-calculator.m
  * measure_power / meter_power are driven by EnergySplitCalculator instead of the single-device path.
  * LIFETIME_ENERGY_CONSUMED (28393) stays in every role's list so the anchor can read it.
  */
+// measure_current.one/two/three (BE1-3) are deliberately excluded from both roles: on this pump
+// family those clamps sit on the incoming main supply (a power-guard for the house fuse), so they
+// read whole-house draw, not the pump's own consumption — confirmed by comparing them against the
+// pump-scoped 22130 reading during the split's validation. Showing them on a role device would
+// contradict its own correctly-split measure_power.
 const ROLE_CONFIG = {
     heating: {
         deviceClass: 'heatpump',
@@ -27,15 +32,22 @@ const ROLE_CONFIG = {
             'target_temperature.room', 'measure_temperature.room',
             'measure_temperature.return_line', 'measure_temperature.outdoor',
             'measure_temperature.average_outdoor', 'measure_temperature.supply_line',
-            'measure_temperature.suction_gas', 'measure_frequency.compressor',
-            'status_compressor', 'measure_degree_minutes',
+            'measure_temperature.suction_gas', 'measure_temperature.discharge',
+            'measure_temperature.liquid_line', 'measure_frequency.compressor',
+            'status_compressor', 'status_operation_priority', 'status_electric_addition',
+            'measure_degree_minutes', 'measure_pump_speed.heating_medium',
+            'measure_compressor_starts', 'time.compressor_runtime',
         ],
         monitored: [
             SSeriesParameterIds.OUTDOOR_TEMP, SSeriesParameterIds.AVERAGE_OUTDOOR_TEMP,
             SSeriesParameterIds.SUPPLY_LINE_TEMP, SSeriesParameterIds.RETURN_TEMP,
             SSeriesParameterIds.SUPPLY_LINE, SSeriesParameterIds.SUCTION_GAS,
+            SSeriesParameterIds.DISCHARGE_TEMP, SSeriesParameterIds.LIQUID_LINE,
             SSeriesParameterIds.DEGREE_MINUTES, SSeriesParameterIds.CURRENT_COMPRESSOR_FREQ,
-            SSeriesParameterIds.COMPRESSOR_STATUS, SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED,
+            SSeriesParameterIds.COMPRESSOR_STATUS, SSeriesParameterIds.OPERATION_PRIORITY,
+            SSeriesParameterIds.ELECTRIC_ADDITION_STATUS, SSeriesParameterIds.HEATING_MEDIUM_PUMP_SPEED,
+            SSeriesParameterIds.COMPRESSOR_STARTS, SSeriesParameterIds.TOTAL_COMPRESSOR_RUNTIME,
+            SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED,
         ],
     },
     hotwater: {
@@ -45,10 +57,12 @@ const ROLE_CONFIG = {
             'measure_power', 'meter_power',
             'measure_temperature.hot_water_top', 'measure_temperature.hot_water_charging',
             'state_button.hot_water_boost', 'state_button.quick_water_heating',
+            'status_operation_priority', 'time.compressor_hot_water_runtime',
         ],
         monitored: [
             SSeriesParameterIds.HOT_WATER_TOP, SSeriesParameterIds.HOT_WATER_CHARGING,
             SSeriesParameterIds.HOT_WATER_BOOST, SSeriesParameterIds.QUICK_WATER_HEATING,
+            SSeriesParameterIds.OPERATION_PRIORITY, SSeriesParameterIds.COMPRESSOR_HOT_WATER_RUNTIME,
             SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED,
         ],
     },

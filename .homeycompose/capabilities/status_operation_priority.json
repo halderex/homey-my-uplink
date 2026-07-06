@@ -1,0 +1,15 @@
+{
+  "title": {
+    "en": "Priority",
+    "sv": "Prioritet",
+    "da": "Prioritet",
+    "no": "Prioritet",
+    "nl": "Prioriteit"
+  },
+  "uiComponent": "sensor",
+  "setable": false,
+  "getable": true,
+  "icon": "/assets/generic.svg",
+  "units": "char",
+  "type": "string"
+}
