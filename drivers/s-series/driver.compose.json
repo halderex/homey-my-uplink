@@ -155,15 +155,6 @@
         "no": "Kompressordriftstid",
         "nl": "Compressor bedrijfstijd"
       }
-    },
-    "time.compressor_hot_water_runtime": {
-      "title": {
-        "en": "Compressor runtime, hot water",
-        "sv": "Kompressordrifttid, varmvatten",
-        "da": "Kompressordriftstid, varmt vand",
-        "no": "Kompressordriftstid, varmtvann",
-        "nl": "Compressor bedrijfstijd, warm water"
-      }
     }
   },
   "platforms": [

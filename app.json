@@ -2719,15 +2719,6 @@
             "no": "Kompressordriftstid",
             "nl": "Compressor bedrijfstijd"
           }
-        },
-        "time.compressor_hot_water_runtime": {
-          "title": {
-            "en": "Compressor runtime, hot water",
-            "sv": "Kompressordrifttid, varmvatten",
-            "da": "Kompressordriftstid, varmt vand",
-            "no": "Kompressordriftstid, varmtvann",
-            "nl": "Compressor bedrijfstijd, warm water"
-          }
         }
       },
       "platforms": [
@@ -3168,6 +3159,29 @@
           }
         }
       ]
+    },
+    "hotwater_amount": {
+      "type": "number",
+      "title": {
+        "en": "Hot water amount",
+        "sv": "Varmvattenmängd",
+        "da": "Varmtvandsmængde",
+        "no": "Varmtvannsmengde",
+        "nl": "Warm water hoeveelheid"
+      },
+      "units": {
+        "en": "min",
+        "sv": "min",
+        "da": "min",
+        "no": "min",
+        "nl": "min"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "insights": true,
+      "decimals": 0,
+      "icon": "/assets/clock.svg"
     },
     "measure_air_velocity": {
       "type": "number",
