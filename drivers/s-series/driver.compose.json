@@ -155,6 +155,15 @@
         "no": "Kompressordriftstid",
         "nl": "Compressor bedrijfstijd"
       }
+    },
+    "time.hot_water_add_heat": {
+      "title": {
+        "en": "Add. heat time (hot water)",
+        "sv": "Tillsats drifttid (varmvatten)",
+        "da": "Tilskudsdrifttid (varmt vand)",
+        "no": "Tilskuddsdriftstid (varmtvann)",
+        "nl": "Bijverwarming looptijd (warm water)"
+      }
     }
   },
   "platforms": [

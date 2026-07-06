@@ -57,13 +57,13 @@ const ROLE_CONFIG = {
             'measure_power', 'meter_power',
             'measure_temperature.hot_water_top', 'measure_temperature.hot_water_charging',
             'hotwater_amount', 'state_button.hot_water_boost', 'state_button.quick_water_heating',
-            'status_operation_priority',
+            'status_operation_priority', 'time.hot_water_add_heat',
         ],
         monitored: [
             SSeriesParameterIds.HOT_WATER_TOP, SSeriesParameterIds.HOT_WATER_CHARGING,
             SSeriesParameterIds.HOT_WATER_AMOUNT, SSeriesParameterIds.HOT_WATER_BOOST,
             SSeriesParameterIds.QUICK_WATER_HEATING, SSeriesParameterIds.OPERATION_PRIORITY,
-            SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED,
+            SSeriesParameterIds.ADD_HEAT_TIME_HOT_WATER, SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED,
         ],
     },
 };
