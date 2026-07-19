@@ -33,7 +33,12 @@ const ROLE_CONFIG = {
         // airflow, power, meter, additional heat power, add-heat runtime. Capabilities this app
         // has that com.nibe.eu.myuplink's heating device doesn't are appended last.
         capabilities: [
-            'measure_temperature.room', 'target_temperature.room',
+            // Room temp/setpoint are promoted to the ROOT measure_temperature / target_temperature
+            // (see _roomTempCap below): Homey's Climate feature reads a device's temperature
+            // capability, and dotted sub-capabilities also lose the auto-generated Flow trigger and
+            // Flow tag. Keeping them root means Climate unambiguously reports the ROOM temperature
+            // rather than a heating-circuit temperature, regardless of capability order.
+            'measure_temperature', 'target_temperature',
             'status_operation_priority', 'measure_frequency.compressor',
             'measure_temperature.supply_line', 'measure_temperature.return_line',
             'measure_temperature.calculated_supply', 'measure_temperature.outdoor',
@@ -46,7 +51,7 @@ const ROLE_CONFIG = {
             'measure_temperature.average_outdoor', 'measure_temperature.suction_gas',
             'measure_compressor_starts', 'time.compressor_runtime', 'status_electric_addition',
         ],
-        // measure_temperature.room / target_temperature.room are NOT fetched here — refreshZoneData()
+        // The room temperature / setpoint are NOT fetched here — refreshZoneData()
         // (called at the end of fetchAndSetDataPoints, for the heating role) sources both from
         // getSmartHomeZones() instead, matching how the stock single device already gets them.
         monitored: [
@@ -123,6 +128,27 @@ class SSeriesDevice extends OAuth2Device {
         // 'state_button.ventilation_boost': SSeriesParameterIds.VENTILATION_BOOST,
         'target_temperature.room': SSeriesParameterIds.ROOM_TEMP_SETPOINT
     };
+
+    /**
+     * Capability holding the room temperature. The energy-split heating role promotes it to the
+     * ROOT `measure_temperature` so Homey's Climate feature reports the actual room temperature
+     * (and so the auto-generated Flow trigger/tag exist); every other device keeps the original
+     * dotted `measure_temperature.room`.
+     * @returns {string}
+     */
+    get _roomTempCap() {
+        return this._role === 'heating' ? 'measure_temperature' : 'measure_temperature.room';
+    }
+
+    /**
+     * Capability holding the room setpoint. Promoted alongside _roomTempCap for the heating role —
+     * Homey pairs a thermostat tile from a matching measure/target suffix, so both must move
+     * together or the tile fragments into separate rows.
+     * @returns {string}
+     */
+    get _roomSetpointCap() {
+        return this._role === 'heating' ? 'target_temperature' : 'target_temperature.room';
+    }
 
     async onOAuth2Init() {
         try {
@@ -323,8 +349,8 @@ ${"#".repeat(deviceInfoHeader.length)}
         }
 
         // Special handling for room temperature which uses zones - keep this as is
-        if (this.hasCapability('target_temperature.room'))
-        this.registerCapabilityListener('target_temperature.room', async (value) => {
+        if (this.hasCapability(this._roomSetpointCap))
+        this.registerCapabilityListener(this._roomSetpointCap, async (value) => {
             try {
                 this.log(`Setting room temperature to ${value}`);
 
@@ -347,7 +373,7 @@ ${"#".repeat(deviceInfoHeader.length)}
                 }
 
                 // Store the target temperature
-                await this.setCapabilityValue('target_temperature.room', value);
+                await this.setCapabilityValue(this._roomSetpointCap, value);
 
             } catch (error) {
                 this.error(`Error setting room temperature: ${error.message}`);
@@ -450,7 +476,7 @@ ${"#".repeat(deviceInfoHeader.length)}
                 }
             }
 
-            // For target_temperature.room and measure_temperature.room, we'll check for zones in a separate method
+            // For the room temperature and setpoint, we'll check for zones in a separate method
             // since they're controlled through the zone system rather than parameters
 
             // Find capabilities that were expected but not updated
@@ -491,12 +517,12 @@ ${"#".repeat(deviceInfoHeader.length)}
             this.log(`Setting target temperature to ${temperature}°C`);
 
             // First, check if we have the capability
-            if (!this.hasCapability('target_temperature.room')) {
+            if (!this.hasCapability(this._roomSetpointCap)) {
                 throw new Error('Device does not support target temperature control');
             }
 
             // First update the capability value
-            await this.setCapabilityValue('target_temperature.room', temperature);
+            await this.setCapabilityValue(this._roomSetpointCap, temperature);
 
             // For S-Series, we need to update through the zone system - keep this as is
             const zones = await this.oAuth2Client.getSmartHomeZones(this.deviceId);
@@ -535,23 +561,23 @@ ${"#".repeat(deviceInfoHeader.length)}
 
             if (controlZone) {
                 // Add/update room temperature capabilities if we have a controllable zone
-                if (!this.hasCapability('target_temperature.room')) {
-                    await this.addCapability('target_temperature.room');
+                if (!this.hasCapability(this._roomSetpointCap)) {
+                    await this.addCapability(this._roomSetpointCap);
                 }
 
-                if (!this.hasCapability('measure_temperature.room')) {
-                    await this.addCapability('measure_temperature.room');
+                if (!this.hasCapability(this._roomTempCap)) {
+                    await this.addCapability(this._roomTempCap);
                 }
 
                 // Update the target temperature capability
                 if (controlZone.setpointHeat !== null) {
-                    await this.setCapabilityValue('target_temperature.room', controlZone.setpointHeat);
+                    await this.setCapabilityValue(this._roomSetpointCap, controlZone.setpointHeat);
                     this.log(`Updated target temperature to ${controlZone.setpointHeat} from zone: ${controlZone.name}`);
                 }
 
                 // If the zone has a temperature reading, update that too
                 if (controlZone.temperature !== null) {
-                    await this.setCapabilityValue('measure_temperature.room', controlZone.temperature);
+                    await this.setCapabilityValue(this._roomTempCap, controlZone.temperature);
                     this.log(`Updated room temperature to ${controlZone.temperature} from zone: ${controlZone.name}`);
                 }
                 if (controlZone.indoorHumidity !== null || controlZone.indoorHumidity !== 0) {
@@ -569,16 +595,16 @@ ${"#".repeat(deviceInfoHeader.length)}
                 } 
             } else {
                 // No controllable zones found, remove room temperature capabilities
-                if (this.hasCapability('target_temperature.room')) {
-                    this.log('No controllable zones found, removing target_temperature.room capability');
-                    await this.removeCapability('target_temperature.room');
+                if (this.hasCapability(this._roomSetpointCap)) {
+                    this.log(`No controllable zones found, removing ${this._roomSetpointCap} capability`);
+                    await this.removeCapability(this._roomSetpointCap);
                 }
 
-                // Keep measure_temperature.room if any zone has a temperature value
+                // Keep the room temperature capability if any zone has a temperature value
                 const anyZoneWithTemp = zones.some(zone => zone.temperature !== null);
-                if (!anyZoneWithTemp && this.hasCapability('measure_temperature.room')) {
-                    this.log('No zones with temperature readings, removing measure_temperature.room capability');
-                    await this.removeCapability('measure_temperature.room');
+                if (!anyZoneWithTemp && this.hasCapability(this._roomTempCap)) {
+                    this.log(`No zones with temperature readings, removing ${this._roomTempCap} capability`);
+                    await this.removeCapability(this._roomTempCap);
                 }
             }
         } catch (error) {
@@ -587,14 +613,14 @@ ${"#".repeat(deviceInfoHeader.length)}
 
             // Remove zone-related capabilities if we can't access zones
             if (error.statusCode === 404) {
-                if (this.hasCapability('target_temperature.room')) {
-                    this.log('Zones not supported, removing target_temperature.room capability');
-                    await this.removeCapability('target_temperature.room');
+                if (this.hasCapability(this._roomSetpointCap)) {
+                    this.log(`Zones not supported, removing ${this._roomSetpointCap} capability`);
+                    await this.removeCapability(this._roomSetpointCap);
                 }
 
-                if (this.hasCapability('measure_temperature.room')) {
-                    this.log('Zones not supported, removing measure_temperature.room capability');
-                    await this.removeCapability('measure_temperature.room');
+                if (this.hasCapability(this._roomTempCap)) {
+                    this.log(`Zones not supported, removing ${this._roomTempCap} capability`);
+                    await this.removeCapability(this._roomTempCap);
                 }
             }
         }

@@ -5,6 +5,26 @@ import {MyUplinkOAuth2Client} from "./lib/api/my-uplink-o-auth2-client.mjs";
 import FSeriesParameterIds from "./lib/models/f-series-parameter-enum.mjs";
 import SSeriesParameterIds from "./lib/models/s-series-parameter-enum.mjs";
 
+/**
+ * Reads a device's room (indoor) temperature.
+ *
+ * Most devices expose it as the dotted `measure_temperature.room`, but the energy-split heating
+ * device promotes it to the ROOT `measure_temperature` so Homey's Climate feature reports the room
+ * temperature rather than a heating-circuit temperature. Flow cards must accept both.
+ *
+ * @param {object} device - the Homey device
+ * @returns {number|null} the room temperature, or null if the device exposes neither capability
+ */
+function getRoomTemperature(device) {
+    if (device.hasCapability('measure_temperature.room')) {
+        return device.getCapabilityValue('measure_temperature.room');
+    }
+    if (device.hasCapability('measure_temperature')) {
+        return device.getCapabilityValue('measure_temperature');
+    }
+    return null;
+}
+
 class NibeHeatpumpApp extends OAuth2App {
     static OAUTH2_CLIENT = MyUplinkOAuth2Client;
     static OAUTH2_DEBUG = false;
@@ -334,7 +354,7 @@ class NibeHeatpumpApp extends OAuth2App {
                 throw new Error('Device not found');
             }
 
-            const currentTemp = device.getCapabilityValue('measure_temperature.room');
+            const currentTemp = getRoomTemperature(device);
 
             if (typeof currentTemp !== 'number') {
                 throw new Error('Indoor temperature not available');
@@ -364,7 +384,7 @@ class NibeHeatpumpApp extends OAuth2App {
                 throw new Error('Device not found');
             }
 
-            const indoorTemp = device.getCapabilityValue('measure_temperature.room');
+            const indoorTemp = getRoomTemperature(device);
             const outdoorTemp = device.getCapabilityValue('measure_temperature.outdoor');
 
             if (typeof indoorTemp !== 'number' || typeof outdoorTemp !== 'number') {
@@ -401,7 +421,7 @@ class NibeHeatpumpApp extends OAuth2App {
             let currentTemp;
 
             if (type === 'indoor') {
-                currentTemp = device.getCapabilityValue('measure_temperature.room');
+                currentTemp = getRoomTemperature(device);
             } else if (type === 'outdoor') {
                 currentTemp = device.getCapabilityValue('measure_temperature.outdoor');
             } else {

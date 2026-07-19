@@ -156,6 +156,24 @@
         "nl": "Compressor bedrijfstijd"
       }
     },
+    "measure_temperature": {
+      "title": {
+        "en": "Room temperature",
+        "sv": "Rumstemperatur",
+        "da": "Rumtemperatur",
+        "no": "Romtemperatur",
+        "nl": "Kamertemperatuur"
+      }
+    },
+    "target_temperature": {
+      "title": {
+        "en": "Target temperature",
+        "sv": "Måltemperatur",
+        "da": "Måltemperatur",
+        "no": "Måltemperatur",
+        "nl": "Streeftemperatuur"
+      }
+    },
     "measure_temperature.discharge": {
       "title": {
         "en": "Hot gas (BT14)",
