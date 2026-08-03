@@ -1,0 +1,23 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Produced energy (pump's own)",
+    "sv": "Producerad energi (pumpens egen)",
+    "da": "Produceret energi (pumpens egen)",
+    "no": "Produsert energi (pumpens egen)",
+    "nl": "Geproduceerde energie (eigen meter)"
+  },
+  "units": {
+    "en": "kWh",
+    "sv": "kWh",
+    "da": "kWh",
+    "no": "kWh",
+    "nl": "kWh"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "insights": true,
+  "decimals": 2,
+  "icon": "/assets/generic.svg"
+}

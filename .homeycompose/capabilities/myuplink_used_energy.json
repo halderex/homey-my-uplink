@@ -1,0 +1,23 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Used energy (pump's own)",
+    "sv": "Använd energi (pumpens egen)",
+    "da": "Brugt energi (pumpens egen)",
+    "no": "Brukt energi (pumpens egen)",
+    "nl": "Verbruikte energie (eigen meter)"
+  },
+  "units": {
+    "en": "kWh",
+    "sv": "kWh",
+    "da": "kWh",
+    "no": "kWh",
+    "nl": "kWh"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "insights": true,
+  "decimals": 2,
+  "icon": "/assets/electric_meter.svg"
+}

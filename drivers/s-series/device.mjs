@@ -50,6 +50,9 @@ const ROLE_CONFIG = {
             'measure_temperature.discharge', 'measure_temperature.liquid_line',
             'measure_temperature.average_outdoor', 'measure_temperature.suction_gas',
             'measure_compressor_starts', 'time.compressor_runtime', 'status_electric_addition',
+            // Reference only (appended last): the pump's own per-function books via myUplink,
+            // for cross-checking the derived split. Not meters — see the parameter map.
+            'myuplink_used_energy', 'myuplink_produced_energy',
         ],
         // The room temperature / setpoint are NOT fetched here — refreshZoneData()
         // (called at the end of fetchAndSetDataPoints, for the heating role) sources both from
@@ -65,6 +68,7 @@ const ROLE_CONFIG = {
             SSeriesParameterIds.AVERAGE_OUTDOOR_TEMP, SSeriesParameterIds.SUCTION_GAS,
             SSeriesParameterIds.COMPRESSOR_STARTS, SSeriesParameterIds.TOTAL_COMPRESSOR_RUNTIME,
             SSeriesParameterIds.ELECTRIC_ADDITION_STATUS, SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED,
+            SSeriesParameterIds.LIFETIME_HEATING_USED_ENERGY, SSeriesParameterIds.HEATING_PRODUCED_ENERGY,
         ],
     },
     hotwater: {
@@ -75,12 +79,15 @@ const ROLE_CONFIG = {
             'measure_temperature.hot_water_top', 'measure_temperature.hot_water_charging',
             'hotwater_amount', 'state_button.hot_water_boost', 'state_button.quick_water_heating',
             'status_operation_priority', 'time.hot_water_add_heat',
+            // Reference only (appended last) — see the heating role.
+            'myuplink_used_energy', 'myuplink_produced_energy',
         ],
         monitored: [
             SSeriesParameterIds.HOT_WATER_TOP, SSeriesParameterIds.HOT_WATER_CHARGING,
             SSeriesParameterIds.HOT_WATER_AMOUNT, SSeriesParameterIds.HOT_WATER_BOOST,
             SSeriesParameterIds.QUICK_WATER_HEATING, SSeriesParameterIds.OPERATION_PRIORITY,
             SSeriesParameterIds.ADD_HEAT_TIME_HOT_WATER, SSeriesParameterIds.LIFETIME_ENERGY_CONSUMED,
+            SSeriesParameterIds.LIFETIME_HOT_WATER_USED_ENERGY, SSeriesParameterIds.HOT_WATER_PRODUCED_ENERGY,
         ],
     },
 };
@@ -766,7 +773,14 @@ ${"#".repeat(deviceInfoHeader.length)}
 
         const desired = roleCfg.capabilities;
         const current = this.getCapabilities().filter((cap) => keep.has(cap));
-        const inOrder = current.length === desired.length && current.every((cap, i) => cap === desired[i]);
+        // "In order" means the capabilities the device already has appear in the declared
+        // sequence — NOT that it has all of them. A pure addition (new capabilities appended to
+        // the role) must not fall through to the rebuild below: that removes every capability
+        // first, which blanks a live meter mid-run. Compare against the declared order filtered
+        // to what's actually present, so missing ones are simply added (they land at the end,
+        // which is where appended capabilities are declared).
+        const present = desired.filter((cap) => current.includes(cap));
+        const inOrder = current.length === present.length && current.every((cap, i) => cap === present[i]);
         if (inOrder) {
             for (const cap of desired) {
                 if (!this.hasCapability(cap)) await this.addCapability(cap).catch((e) => this.error(`[split] add ${cap}: ${e.message}`));
